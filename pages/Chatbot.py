@@ -22,7 +22,7 @@ if "recording" not in st.session_state:
 if "userName" not in st.session_state:
     userName = 'User'
 else:
-    serName = st.session_state.userName
+    userName = st.session_state.userName
 
 #init the userName
 if "userAge" not in st.session_state:
