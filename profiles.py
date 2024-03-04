@@ -3,11 +3,10 @@ import openai
 import json
 import time
 
-openai.api_key = "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"
-
 class Profile:
-    def __init__(self, prompt):
+    def __init__(self, prompt, api_key):
         self.prompt = prompt
+        self.api_key = api_key
         # self.age = 'unknown'
         # self.gender = 'unknown'
         # self.career = 'unknown'
@@ -17,6 +16,7 @@ class Profile:
         self.max_try = 0
 
     def questionAnswering(self, question, answer_format):
+        openai.api_key = self.api_key
         completion = openai.chat.completions.create(
         model="gpt-4",
         messages=[
