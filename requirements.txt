@@ -3,4 +3,3 @@ streamlit_extras
 openai
 streamlit_modal
 streamlit_chatbox
-bokeh
