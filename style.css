@@ -1,0 +1,5 @@
+body {
+    background-image: url('pictures/rose.jpeg'); /* 设置背景图片的URL */
+    background-size: cover; /* 确保背景图片覆盖整个页面 */
+    background-repeat: no-repeat; /* 避免背景图片重复 */
+}
