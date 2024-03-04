@@ -9,10 +9,11 @@ gender = st.text_input(label = 'Gender', placeholder = 'Please enter your gender
 job = st.text_input(label = 'Job', placeholder = 'Please enter your job...')
 personality = st.text_input(label = 'Personality (Personality can be a description or several keywords)', placeholder = 'Please enter your personalities...')
 hobby = st.text_input(label = 'Hobby (Hobby can be a description or several keywords)', placeholder = 'Please enter your hobbies...')
+key = st.text_input(label = 'OpenAI API Key', placeholder = 'Please enter your OpenAI API Keys...')
 
 prompt = f'Hi, my name is {userName}, my age is {age}, my gender is {gender}, my job is {job}, my personalities are {personality}, my hobbies are {hobby}.'
 
-profile = Profile(prompt)
+profile = Profile(prompt, key)
 userAge, userGender, userCareer, userPersonality, userHobby = profile.returnProfile()
 
 st.session_state.userName = userName
