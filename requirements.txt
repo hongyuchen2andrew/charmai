@@ -1,5 +1,6 @@
-streamlit
-python
+pip==24.0 
+streamlit==1.31.1
+python==3.11.8
 streamlit_extras
 openai
 streamlit_modal
