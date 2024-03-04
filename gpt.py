@@ -3,7 +3,7 @@ import openai
 import json
 import time
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 class LargeLanguageModels:
     def __init__(self, profile, userProfile):
