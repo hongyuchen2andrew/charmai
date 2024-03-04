@@ -4,7 +4,6 @@ import time
 import simplejson as json
 from streamlit_modal import Modal
 import streamlit.components.v1 as components
-from audio_recorder_streamlit import audio_recorder
 
 from gpt import LargeLanguageModels
 from profiles import Profile
@@ -67,6 +66,7 @@ with st.sidebar:
         placeholder="Select the mode...",
         )
     introduction = st.text_area(label = 'Description', placeholder = 'Please enter the description...')
+    api_key = st.text_area(label = 'API_key', placeholder = 'Please enter your OpenAI API key...')
     st.divider()
 
     btns = st.container()
@@ -116,7 +116,7 @@ if option == "Role Play":
         if len(chat_box.history) <= 8:
             personality, hobby = 'unknown', 'unknown'
             userHobby = 'unknown'
-        LLM = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby))
+        LLM = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby), api_key)
 
         if query := st.chat_input('Chat with CharmAI...'):
             chat_box.user_say(query)
@@ -171,7 +171,7 @@ elif option == "Teaching":
         career = 'unknown'
     if len(chat_box.history) <= 8:
         personality, hobby = 'unknown', 'unknown'
-    LLM = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby))
+    LLM = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby), api_key)
     if query := st.chat_input('Chat with CharmAI...'):
         chat_box.user_say(query)
         text, st.session_state.recording = LLM.teaching(query, st.session_state.recording)
@@ -225,7 +225,7 @@ elif option == "Analysis":
         career = 'unknown'
     if len(chat_box.history) <= 8:
         personality, hobby = 'unknown', 'unknown'
-    LLM = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby))
+    LLM = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby), api_key)
 
     if query := st.chat_input('Chat with CharmAI...'):
         chat_box.user_say(query)
@@ -268,7 +268,7 @@ else:
     st.session_state.analysis = 0
     profile = ''
     userProfile = ''
-    LLM = LargeLanguageModels(profile, userProfile)
+    LLM = LargeLanguageModels(profile, userProfile, api_key)
     if query := st.chat_input('Chat with CharmAI...'):
         chat_box.user_say(query)
         text, st.session_state.recording = LLM.chatGPT(query, st.session_state.recording)
@@ -303,37 +303,3 @@ else:
 
     if show_history:
         st.write(chat_box.history)
-
-# cols = st.columns(2)
-# if cols[0].button('show me the multimedia'):
-#     chat_box.ai_say(Image(
-#         'https://tse4-mm.cn.bing.net/th/id/OIP-C.cy76ifbr2oQPMEs2H82D-QHaEv?w=284&h=181&c=7&r=0&o=5&dpr=1.5&pid=1.7'))
-#     time.sleep(0.5)
-#     chat_box.ai_say(
-#         Video('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4'))
-#     time.sleep(0.5)
-#     chat_box.ai_say(
-#         Audio('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4'))
-
-# if cols[1].button('run agent'):
-#     chat_box.user_say('run agent')
-#     agent = FakeAgent()
-#     text = ""
-
-#     # streaming:
-#     chat_box.ai_say() # generate a blank placeholder to render messages
-#     for d in agent.run_stream():
-#         if d["type"] == "complete":
-#             chat_box.update_msg(expanded=False, state="complete")
-#             chat_box.insert_msg(d["llm_output"])
-#             break
-
-#         if d["status"] == 1:
-#             chat_box.update_msg(expanded=False, state="complete")
-#             text = ""
-#             chat_box.insert_msg(Markdown(text, title=d["text"], in_expander=True, expanded=True))
-#         elif d["status"] == 2:
-#             text += d["llm_output"]
-#             chat_box.update_msg(text, streaming=True)
-#         else:
-#             chat_box.update_msg(text, streaming=False)
