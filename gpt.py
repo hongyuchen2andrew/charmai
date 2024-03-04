@@ -3,14 +3,14 @@ import openai
 import json
 import time
 
-openai.api_key = "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"
-
 class LargeLanguageModels:
-    def __init__(self, profile, userProfile):
+    def __init__(self, profile, userProfile, key):
         self.profile = profile
         self.userProfile = userProfile
+        self.key = key
     #The most basic chatGPT with model == "gpt-4"
     def chatGPT(self, prompt, recording):
+        openai.api_key = self.key
         completion = openai.chat.completions.create(
         model="gpt-4",
         messages=[
@@ -24,6 +24,7 @@ class LargeLanguageModels:
     
     #If the user choose option == role play, then GPT will play the specific role
     def rolePlay(self, prompt, recording):
+        openai.api_key = self.key
         age, gender, career, personality, hobby = self.profile
         userName, userAge, userGender, userCareer, userPersonality, userHobby = self.userProfile
         completion = openai.chat.completions.create(
@@ -54,6 +55,7 @@ class LargeLanguageModels:
     
     #If the user choose option == teaching, then GPT will play the specific role and give feedback to your message
     def teaching(self, prompt, recording):
+        openai.api_key = self.key
         age, gender, career, personality, hobby = self.profile
         userName, userAge, userGender, userCareer, userPersonality, userHobby = self.userProfile
         completion = openai.chat.completions.create(
@@ -76,6 +78,7 @@ class LargeLanguageModels:
     
     #If the user choose option == analysis, then GPT will analysis the history file or screen shot and teach you how to reply
     def analysis(self, prompt, recording):
+        openai.api_key = self.key
         age, gender, career, personality, hobby = self.profile
         userName, userAge, userGender, userCareer, userPersonality, userHobby = self.userProfile
         completion = openai.chat.completions.create(
