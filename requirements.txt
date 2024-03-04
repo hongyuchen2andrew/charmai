@@ -1,5 +1,5 @@
-pip==24.0 
-streamlit==1.31.1
+pip
+streamlit
 python
 streamlit_extras
 openai
