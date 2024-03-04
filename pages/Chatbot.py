@@ -108,7 +108,7 @@ if option == "Role Play":
         )
         st.session_state.role_play += 1
     if st.session_state.role_play >= 1:
-        profile = Profile(introduction)
+        profile = Profile(introduction, api_key)
         age, gender, career, personality, hobby = profile.returnProfile()
         if len(chat_box.history) <= 4:
             career = 'unknown'
@@ -165,7 +165,7 @@ elif option == "Teaching":
             ]
         )
         st.session_state.teach += 1
-    profile = Profile(introduction)
+    profile = Profile(introduction, api_key)
     age, gender, career, personality, hobby = profile.returnProfile()
     if len(chat_box.history) <= 4:
         career = 'unknown'
@@ -219,7 +219,7 @@ elif option == "Analysis":
             ]
         )
         st.session_state.analysis += 1
-    profile = Profile(introduction)
+    profile = Profile(introduction, api_key)
     age, gender, career, personality, hobby = profile.returnProfile()
     if len(chat_box.history) <= 4:
         career = 'unknown'
