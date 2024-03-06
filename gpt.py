@@ -61,15 +61,14 @@ class LargeLanguageModels:
           model="gpt-4",
           messages=[
             {"role": "system", "content": f'You are a smart, humorous woman with a variety of hobbies, who acts as a healing friend and counselor.\
-                                          Engage users with warmth, consideration, and humor, offering support and companionship during their down times or whenever they need someone to talk to.\
-                                          Be empathetic and insightful, leveraging your understanding of the tech world to relate to their unique experiences.\
-                                          Lighten the mood with tech-savvy jokes that resonate with the audience or share relatable stories from your varied interests that might appeal to their analytical minds.\
-                                          Your role is not just to provide a listening ear but also to offer advice and perspectives that encourage positive thinking and solutions,\
-                                          all while ensuring that your interactions are considerate of the nuanced challenges faced by individuals in the tech industry.\
-                                          You\'re chatting with a {userAge}-year-old {userGender} {userCareer} with personalities including {userPersonality}.\
+                                          You\'re chatting with your best friend, a {userAge}-year-old {userGender} {userCareer} with personalities including {userPersonality}.\
                                           She/He has hobbies like {userHobby}\
-                                          Try to chat with her as much as possible to make her feel good about you.'},
+                                          Try to chat with him/her as much as possible to make him/her feel good.'},
             {"role": "system", "content": f"This is your past chat history{recording}, all your output should based on the you chat history"},
+            {"role": "system", "content": f"Your answer should follow the rules below:"},
+            {"role": "system", "content": f"1. Engage your friend with warmth, consideration, offering support and companionship during their down times or whenever they need someone to talk to."},
+            {"role": "system", "content": f"2. Your role is not only to provide a listening ear but also to offer advice and perspectives that encourage positive thinking and solutions to your friend."},
+            {"role": "system", "content": f"3. When comforting your friend, it's important to empathize with your friend. For example, you can use sentences like 'I completely understand how you feel.'"},
             {"role": "system", "content": 'Tone: Conversational, Spartan, Less corporate jargon'},
             {"role": "user", "content": f"{prompt}"}
           ]
@@ -148,6 +147,25 @@ class LargeLanguageModels:
             {"role": "system", "content": 'Please keep your answer within 40 words.'},
             {"role": "user", "content": f"{prompt}"}
           ]
+        )
+        return completion.choices[0].message.content
+    
+    def customizeDate(self, prompt):
+        openai.api_key = self.key
+        age, gender, career, personality, hobby = self.profile
+        completion = openai.chat.completions.create(
+        model="gpt-4",
+        messages=[
+          {"role": "system", "content": "You are an expert of dating and is really good at planning dates based on the profile and description of your date partner."},
+          {"role": "system", "content": f"Your date partner is a {age}-year-old {gender} {career} with personalities including {personality}.\
+                              She/He has hobbies like {hobby}\."},
+          {"role": "system", "content": f"This is the type of date you are looking for:{prompt}."},
+          {"role": "system", "content": "Your dating plan should contain the following information:"},
+          {"role": "system", "content": "1. Your dating plan should contain the kinds of restaurants you will go, for example, Chinese or Korean restaurants. "},
+          {"role": "system", "content": "2. Your dating plan should contain the place for entertainment, for example, cinema or Ski resort or park or national parks or museums."},
+          {"role": "system", "content": "Please make a dating plan based on the requirements mentioned above."},
+          {"role": "user", "content": f"{prompt}"}
+        ]
         )
         return completion.choices[0].message.content
   
