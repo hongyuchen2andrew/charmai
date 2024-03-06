@@ -8,12 +8,12 @@ import streamlit.components.v1 as components
 
 from gpt import LargeLanguageModels
 from profiles import Profile
+from duckduckgo import restaurantRecommendation
 
 introduction = 'Hi, my name is Andrew. I have lived in China for 20 years. Last year, I went to MIT for my master degree. So as you can see, I am twenty one years old\
                 I love coding, playing basketball, singing, going hiking. Nice to meet you.'  
 
 st.title("CharmAI")
-profile = Profile
 chat_box = ChatBox()
 
 if "recording" not in st.session_state:
@@ -113,7 +113,6 @@ if st.session_state.guidance == 0:
         ]
     )
     st.session_state.guidance += 1
-print(len(chat_box.history))
 if "api_key" in st.session_state:
     api_key = st.session_state.api_key
 if not api_key:
@@ -122,12 +121,11 @@ if not api_key:
     st.stop() 
 profile = Profile(introduction, api_key)
 if option == "Role Play":
-    # st.session_state.your_friend = 0
-    # st.session_state.chat_consultant = 0
-    # st.session_state.date_expert = 0
+    st.session_state.your_friend = 0
+    st.session_state.chat_consultant = 0
+    st.session_state.date_expert = 0
     
     if st.session_state.role_play == 0:
-        chat_box.init_session(clear=True)
         chat_box.ai_say(
             [
                 Markdown('Please give me a breif description of the role you want me to play in the sidebar! Try to include some key information like age, gender, careers, and also personality.\
@@ -140,12 +138,14 @@ if option == "Role Play":
         st.session_state.role_play += 1
     if st.session_state.role_play >= 1:
         age, gender, career, personality, hobby = profile.returnProfile()
+        #-------------------------------------------------#
         if len(chat_box.history) <= 4:
             career = 'unknown'
             userCareer = 'unknown'
         if len(chat_box.history) <= 8:
             personality, hobby = 'unknown', 'unknown'
             userHobby = 'unknown'
+        #-------------------------------------------------#
         LLM = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby), api_key)
         if query := st.chat_input('Chat with CharmAI...'):
             chat_box.user_say(query)
@@ -192,8 +192,8 @@ if option == "Role Play":
 
 elif option == "Your Friend":
     st.session_state.role_play = 0
-    # st.session_state.chat_consultant = 0
-    # st.session_state.date_expert = 0
+    st.session_state.chat_consultant = 0
+    st.session_state.date_expert = 0
     if st.session_state.your_friend == 0:
         chat_box.ai_say(
             [
@@ -216,6 +216,7 @@ elif option == "Your Friend":
             text, st.session_state.recording = LLM.yourFriendForMale(query, st.session_state.recording)
         else:
             text, st.session_state.recording = LLM.yourFriendForFemale(query, st.session_state.recording)
+        text += ' By the way, if you can upload a screenshot of the chat history, our **Chat Consultant** feature might be able to help you.'
         chat_box.ai_say(
             [
                 Markdown(text, in_expander=in_expander,
@@ -250,8 +251,8 @@ elif option == "Your Friend":
 
 elif option == "Chat Consultant":
     st.session_state.role_play = 0
-    # st.session_state.your_friend = 0
-    # st.session_state.date_expert = 0
+    st.session_state.your_friend = 0
+    st.session_state.date_expert = 0
     if st.session_state.chat_consultant == 0:
         chat_box.ai_say(
             [
@@ -261,6 +262,7 @@ elif option == "Chat Consultant":
             ]
         )
         st.session_state.chat_consultant += 1
+    if image:
         st.image('chat_history.jpg')
     # if image:
     #     chat_box.ai_say(
@@ -273,7 +275,7 @@ elif option == "Chat Consultant":
 
     if query := st.chat_input('Chat with CharmAI...'):
         chat_box.user_say(query)
-        if st.session_state.chat_consultant == 1:
+        if st.session_state.chat_consultant < 100:
             chat_box.ai_say(
                 [
                     Markdown('Hi Andrew,<br>\
@@ -284,7 +286,7 @@ elif option == "Chat Consultant":
                                 expanded=True, state='complete', title="CharmAI"),
                 ]
             )
-            st.session_state.chat_consultant += 1
+            st.session_state.chat_consultant += 100
         else:
             chat_box.ai_say(
                 [
@@ -339,12 +341,12 @@ elif option == "Chat Consultant":
 
 elif option == "Date Expert":
     st.session_state.role_play = 0
-    # st.session_state.your_friend = 0
-    # st.session_state.chat_consultant = 0
+    st.session_state.your_friend = 0
+    st.session_state.chat_consultant = 0
     if st.session_state.date_expert == 0:
         chat_box.ai_say(
             [
-                Markdown('Please give me a file or screen shot that contains the chat you want me to analysis so that I can give you some suggestion about how to reply!', 
+                Markdown('Please briefly describe what kind of date you would like. Romantic? Thrilling? Or artistic?', 
                             in_expander=in_expander,
                             expanded=True, state='complete', title="CharmAI"),
             ]
@@ -352,7 +354,69 @@ elif option == "Date Expert":
         st.session_state.date_expert += 1
     profile = Profile(introduction, api_key)
     age, gender, career, personality, hobby = profile.returnProfile()
+    LLM = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby), api_key)
+    if query := st.chat_input('Chat with CharmAI...'):
+        chat_box.user_say(query)
+        date_plan = LLM.customizeDate(query)
+        chat_box.ai_say(
+            [
+                Markdown(date_plan, 
+                        in_expander=in_expander,
+                        expanded=True, state='complete', title="CharmAI"),
+            ]
+        )
+        st.session_state.date_expert += 1
+        recommendation = restaurantRecommendation(date_plan, api_key)
+        for rec in recommendation:
+            if rec == 'unknown':
+                continue
+            try:
+                title = rec[0]['title']
+                st.write('**Name:** ', title)
+                #print('Name: ', title)
+            except:
+                st.write('**Address:** ', 'unknown')
+                #print('Name: ', 'unknown')
 
+            try:
+                address = rec[0]['address']
+                st.write('**Address:** ', address)
+                #print('Address: ', address)
+            except:
+                st.write('**Address:** ', 'unknown')
+                #print('Address: ', 'unknown')
+
+            try:
+                phone = rec[0]['phone']
+                st.write('**Phone:** ', phone)
+                #print('Phone: ', phone)
+            except:
+                st.write('**Phone:** ', 'unknown')
+                #print('Phone: ', 'unknown')
+
+            try:
+                website = rec[0]['website']
+                st.write('**Website:** ', website)
+                #print('Website: ', website)
+            except:
+                st.write('**Website:** ', 'unknown')
+                #print('Website: ', 'unknown')
+
+            try:
+                link = rec[0]['link']
+                st.write('**Link:** ', link)
+                #print('Link: ', link)
+            except:
+                st.write('**Link:** ', 'unknown')
+                #print('Link: ', 'unknown')
+
+
+        # chat_box.ai_say(
+        #     [
+        #         Markdown(text, in_expander=in_expander,
+        #                     expanded=True, state='complete', title="CharmAI"),
+        #     ]
+        # )
 
     # btns.download_button(
     #     "Export Markdown",
@@ -382,9 +446,9 @@ elif option == "Date Expert":
 
 else:
     st.session_state.role_play = 0
-    # st.session_state.your_friend = 0
-    # st.session_state.chat_consultant = 0
-    # st.session_state.date_expert = 0
+    st.session_state.your_friend = 0
+    st.session_state.chat_consultant = 0
+    st.session_state.date_expert = 0
     profile = ''
     userProfile = ''
     LLM = LargeLanguageModels(profile, userProfile, api_key)
@@ -422,37 +486,3 @@ else:
 
     if show_history:
         st.write(chat_box.history)
-
-# cols = st.columns(2)
-# if cols[0].button('show me the multimedia'):
-#     chat_box.ai_say(Image(
-#         'https://tse4-mm.cn.bing.net/th/id/OIP-C.cy76ifbr2oQPMEs2H82D-QHaEv?w=284&h=181&c=7&r=0&o=5&dpr=1.5&pid=1.7'))
-#     time.sleep(0.5)
-#     chat_box.ai_say(
-#         Video('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4'))
-#     time.sleep(0.5)
-#     chat_box.ai_say(
-#         Audio('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4'))
-
-# if cols[1].button('run agent'):
-#     chat_box.user_say('run agent')
-#     agent = FakeAgent()
-#     text = ""
-
-#     # streaming:
-#     chat_box.ai_say() # generate a blank placeholder to render messages
-#     for d in agent.run_stream():
-#         if d["type"] == "complete":
-#             chat_box.update_msg(expanded=False, state="complete")
-#             chat_box.insert_msg(d["llm_output"])
-#             break
-
-#         if d["status"] == 1:
-#             chat_box.update_msg(expanded=False, state="complete")
-#             text = ""
-#             chat_box.insert_msg(Markdown(text, title=d["text"], in_expander=True, expanded=True))
-#         elif d["status"] == 2:
-#             text += d["llm_output"]
-#             chat_box.update_msg(text, streaming=True)
-#         else:
-#             chat_box.update_msg(text, streaming=False)
