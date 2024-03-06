@@ -289,9 +289,6 @@ class Profile:
 # print('career:', career)
 # print('personality:', personality)
 # print('hobby:', hobby)
-//         recording.append('User:'+ prompt)
-//         recording.append('System:'+ completion.choices[0].message.content)
-//         return completion.choices[0].message.content, recording
 
 
 
