@@ -1,0 +1,100 @@
+// import os
+// import openai
+// import json
+// import time
+
+// class LargeLanguageModels:
+//     def __init__(self, profile, userProfile, key):
+//         self.profile = profile
+//         self.userProfile = userProfile
+//         self.key = key
+//     #The most basic chatGPT with model == "gpt-4"
+//     def chatGPT(self, prompt, recording):
+//         openai.api_key = self.key
+//         completion = openai.chat.completions.create(
+//         model="gpt-4",
+//         messages=[
+//           {"role": "system", "content": f"This is your past chat history{recording}, all your output should based on the you chat history"},
+//           {"role": "user", "content": f"{prompt}"}
+//         ]
+//         )
+//         recording.append('User:'+ prompt)
+//         recording.append('System:'+ completion.choices[0].message.content)
+//         return completion.choices[0].message.content, recording
+    
+//     #If the user choose option == role play, then GPT will play the specific role
+//     def rolePlay(self, prompt, recording):
+//         openai.api_key = self.key
+//         age, gender, career, personality, hobby = self.profile
+//         userName, userAge, userGender, userCareer, userPersonality, userHobby = self.userProfile
+//         completion = openai.chat.completions.create(
+//           model="gpt-4",
+//           messages=[
+//             {"role": "system", "content": f'You\'re a person that\'s really good at chatting. Right now, you\'re using a dating app.\
+//                               You\'re a {age}-year-old {gender} {career} with personalities including {personality}.\
+//                               She/He has hobbies like {hobby}\
+//                               You\'re chatting with a {userAge}-year-old {userGender} {userCareer} with personalities including {userPersonality}.\
+//                               You has hobbies like {userHobby}\
+//                               Try to chat with her as much as possible to make her feel good about you.'},
+//             {"role": "system", "content": 'Below are some tips that you can follow.'},
+//             {"role": "system", "content": '1. Ask about something specific on the person\'s profile. For example, “You work at an art museum? That\'s so interesting! What\'s that like?”'},
+//             {"role": "system", "content": '2. Offer up a fun "would you rather" question. For example, “Would you rather spend a weekend at home watching Netflix in PJs or being up and out early, enjoying the day? ”'},
+//             {"role": "system", "content": '3. Ask a general open-ended question. For example, "What\'s your favorite movie?" or "Do you have animals?".'},
+//             {"role": "system", "content": '4. Ask what they\'re looking for. For example, "What does your ideal romantic future look like?" or "What are you looking for in a relationship?".'},
+//             {"role": "system", "content": '5. When replying, you need to use one sentence to share your experience on the last topic.'},
+//             #{"role": "system", "content": '6. Add some emojis and use some common abbreviations if suitable. For example, \'let me know\' can be writen into \'LMK\''},
+//             {"role": "system", "content": f"This is your past chat history{recording}, all your output should based on the you chat history"},
+//             {"role": "system", "content": 'Tone: Conversational, Spartan, Less corporate jargon, No difficult words'},
+//             {"role": "system", "content": 'Please keep your answer within 40 words.'},
+//             {"role": "user", "content": f"{prompt}"}
+//           ]
+//         )
+//         recording.append('User:'+ prompt)
+//         recording.append('System:'+ completion.choices[0].message.content)
+//         return completion.choices[0].message.content, recording
+    
+//     #If the user choose option == teaching, then GPT will play the specific role and give feedback to your message
+//     def teaching(self, prompt, recording):
+//         openai.api_key = self.key
+//         age, gender, career, personality, hobby = self.profile
+//         userName, userAge, userGender, userCareer, userPersonality, userHobby = self.userProfile
+//         completion = openai.chat.completions.create(
+//           model="gpt-4",
+//           messages=[
+//             {"role": "system", "content": f'You\'re a person that\'s really good at chatting. Right now, you\'re using a dating app.\
+//                               You\'re a {userAge}-year-old {userGender} {userCareer} with personalities including {userPersonality}.\
+//                               You has hobbies like {userHobby}\
+//                               You\'re chatting with a {age}-year-old {gender} {career} with personalities including {personality}.\
+//                               She/He has hobbies like {hobby}\
+//                               Try to chat with her as much as possible to make her feel good about you.'},
+//             {"role": "system", "content": f"This is your past chat history{recording}, all your output should based on the you chat history"},
+//             {"role": "system", "content": 'Tone: Conversational, Spartan, Less corporate jargon'},
+//             {"role": "user", "content": f"{prompt}"}
+//           ]
+//         )
+//         recording.append('User:'+ prompt)
+//         recording.append('System:'+ completion.choices[0].message.content)
+//         return completion.choices[0].message.content, recording
+    
+//     #If the user choose option == analysis, then GPT will analysis the history file or screen shot and teach you how to reply
+//     def analysis(self, prompt, recording):
+//         openai.api_key = self.key
+//         age, gender, career, personality, hobby = self.profile
+//         userName, userAge, userGender, userCareer, userPersonality, userHobby = self.userProfile
+//         completion = openai.chat.completions.create(
+//           model="gpt-4",
+//           messages=[
+//             {"role": "system", "content": f'You\'re a person that\'s really good at chatting. Right now, you\'re using a dating app.\
+//                               You\'re a {userAge}-year-old {userGender} {userCareer} with personalities including {userPersonality}.\
+//                               You has hobbies like {userHobby}\
+//                               You\'re chatting with a {age}-year-old {gender} {career} with personalities including  {personality}.\
+//                               She/He has hobbies like {hobby}\
+//                               Try to chat with her as much as possible to make her feel good about you.'},
+//             {"role": "system", "content": f"This is your past chat history{recording}, all your output should based on the you chat history"},
+//             {"role": "system", "content": 'Tone: Conversational, Spartan, Less corporate jargon'},
+//             {"role": "user", "content": f"{prompt}"}
+//           ]
+//         )
+//         recording.append('User:'+ prompt)
+//         recording.append('System:'+ completion.choices[0].message.content)
+//         return completion.choices[0].message.content, recording
