@@ -69,7 +69,9 @@ with st.sidebar:
     if option == "Role Play":
         give_feedback = st.checkbox('Recieve feedback regarding your message from CharmAI.', False)
     introduction = st.text_area(label = 'Description', placeholder = 'Please enter the description...')
-    api_key = st.text_area(label = 'API Key', placeholder = 'Please enter your OpenAI API key...')
+    api_key = st.text_input(label = 'OpenAI API Key', placeholder = 'Please enter your OpenAI API key...')
+    perplexity_key = st.text_input(label = 'Perplexity API Key', placeholder = 'Please enter your Perplexity API key...')
+    google_key = st.text_input(label = 'Google API Key', placeholder = 'Please enter your Google API key...')
     st.divider()
 
     btns = st.container()
@@ -113,11 +115,15 @@ if st.session_state.guidance == 0:
         ]
     )
     st.session_state.guidance += 1
-if "api_key" in st.session_state:
+if ("api_key" in st.session_state) and ("perplexity_key" in st.session_state) and ("google_key" in st.session_state):
     api_key = st.session_state.api_key
-if not api_key:
-    st.error("Please input your OpenAI API Key in the sidebar.\
-              Don't have a key? Click here: https://openai.com/blog/openai-api")
+    perplexity_key = st.session_state.perplexity_key
+    google_key = st.session_state.google_key
+if (not api_key) or (not perplexity_key) or (not google_key):
+    st.error("Please input your API Key in the sidebar.\
+              Don't have a OpenAI key? Click here: https://openai.com/blog/openai-api\
+              Don't have a Perplexity key? Click here: https://www.perplexity.ai/settings/api\
+              Don't have a Google key? Click here: https://serpapi.com/.")
     st.stop() 
 profile = Profile(introduction, api_key)
 if option == "Role Play":
@@ -366,7 +372,7 @@ elif option == "Date Expert":
             ]
         )
         st.session_state.date_expert += 1
-        recommendation = restaurantRecommendation(date_plan, api_key)
+        recommendation = restaurantRecommendation(date_plan, api_key, google_key, perplexity_key)
         for rec in recommendation:
             if rec == 'unknown':
                 continue
@@ -486,3 +492,38 @@ else:
 
     if show_history:
         st.write(chat_box.history)
+
+# cols = st.columns(2)
+# if cols[0].button('show me the multimedia'):
+#     chat_box.ai_say(Image(
+#         'https://tse4-mm.cn.bing.net/th/id/OIP-C.cy76ifbr2oQPMEs2H82D-QHaEv?w=284&h=181&c=7&r=0&o=5&dpr=1.5&pid=1.7'))
+#     time.sleep(0.5)
+#     chat_box.ai_say(
+#         Video('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4'))
+#     time.sleep(0.5)
+#     chat_box.ai_say(
+#         Audio('https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4'))
+
+# if cols[1].button('run agent'):
+#     chat_box.user_say('run agent')
+#     agent = FakeAgent()
+#     text = ""
+
+#     # streaming:
+#     chat_box.ai_say() # generate a blank placeholder to render messages
+#     for d in agent.run_stream():
+#         if d["type"] == "complete":
+#             chat_box.update_msg(expanded=False, state="complete")
+#             chat_box.insert_msg(d["llm_output"])
+#             break
+
+#         if d["status"] == 1:
+#             chat_box.update_msg(expanded=False, state="complete")
+#             text = ""
+#             chat_box.insert_msg(Markdown(text, title=d["text"], in_expander=True, expanded=True))
+#         elif d["status"] == 2:
+#             text += d["llm_output"]
+#             chat_box.update_msg(text, streaming=True)
+#         else:
+#             chat_box.update_msg(text, streaming=False)
+
