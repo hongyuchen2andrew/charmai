@@ -7,7 +7,7 @@ def get_base64(bin_file):
     with open(bin_file, 'rb') as f:
         data = f.read()
     return base64.b64encode(data).decode()
-bin_str = get_base64("back3.jpg")
+bin_str = get_base64("back4.jpg")
 background = """
                 <style>
                 .stApp {
@@ -17,7 +17,6 @@ background = """
                 </style>
              """% bin_str
 st.markdown(background, unsafe_allow_html=True)
-
 st.markdown(
     """
     <style>
