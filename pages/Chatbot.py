@@ -1,12 +1,14 @@
 import streamlit as st
 from streamlit_chatbox import *
 import time
+import base64
 import simplejson as json
 from streamlit_modal import Modal
 import streamlit.components.v1 as components
 
 from gpt import LargeLanguageModels
 from profiles import Profile
+from duckduckgo import restaurantRecommendation
 
 introduction = 'Hi, my name is Andrew. I have lived in China for 20 years. Last year, I went to MIT for my master degree. So as you can see, I am twenty one years old\
                 I love coding, playing basketball, singing, going hiking. Nice to meet you.'  
@@ -61,54 +63,82 @@ with st.sidebar:
     show_history = st.checkbox('show history', False)
     option = st.selectbox(
         "Please choose the mode:",
-        ("Role Play", "Teaching", "Analysis"),
+        ("Your Friend", "Chat Consultant", "Role Play", "Date Expert"),
         index=None,
         placeholder="Select the mode...",
         )
+    if option == "Role Play":
+        give_feedback = st.checkbox('Recieve feedback regarding your message from CharmAI.', False)
     introduction = st.text_area(label = 'Description', placeholder = 'Please enter the description...')
-    api_key = st.text_area(label = 'API_key', placeholder = 'Please enter your OpenAI API key...')
+    api_key = st.text_area(label = 'API Key', placeholder = 'Please enter your OpenAI API key...')
     st.divider()
 
     btns = st.container()
 
-    file = st.file_uploader(
-        "chat history json",
-        type=["json"]
+    image = st.file_uploader(
+        "Chat history screenshot"
     )
-    # audio_bytes = audio_recorder(pause_threshold=2.0, sample_rate=41_000)
-    # if audio_bytes:
-    #     st.audio(audio_bytes, format="audio/wav")
 
-    if st.button("Load Json") and file:
-        data = json.load(file)
-        chat_box.from_dict(data)
 
 chat_box.init_session()
 chat_box.output_messages()
 
 if "role_play" not in st.session_state:
     st.session_state.role_play = 0
-if "teach" not in st.session_state:
-    st.session_state.teach = 0
-if "analysis" not in st.session_state:
-    st.session_state.analysis = 0
+if "your_friend" not in st.session_state:
+    st.session_state.your_friend = 0
+if "chat_consultant" not in st.session_state:
+    st.session_state.chat_consultant = 0
+if "date_expert" not in st.session_state:
+    st.session_state.date_expert = 0
 
+if "guidance" not in st.session_state:
+    st.session_state.guidance = 0
+    
+if st.session_state.guidance == 0:
+    chat_box.ai_say(
+        [
+            Markdown('What do you need?<br>\
+                    Pick one mode from left side bar- \"Please choose the mode\"<br>\
+                    **Your Friend**:<br>\
+                    Feeling sad, lonely, or in need of a chat? CharmAI is here for you—a smart, warmth and humor woman to keep you company.<br>\
+                    **Chat Consultant**:<br>\
+                    Need tips on what to say next? CharmAI offers advice and insights to keep your conversations engaging and forward-moving<br>\
+                    **Role Play**:<br>\
+                    Want to charm someone special? Practice together to spark engaging conversations, where CharmAI is the person you\'re drawn to.<br>\
+                    **Date Expert**:<br>\
+                    Anxious about your upcoming date? Date Expert provides tailored guidance to help you plan dates that leave a lasting impression<br>\
+                    ***Notice:** If you choose none of the above, GPT4 will be used as your default assistant.*',
+                    in_expander=in_expander,
+                    expanded=True, state='complete', title="CharmAI"),
+        ]
+    )
+    st.session_state.guidance += 1
+
+if "api_key" in st.session_state:
+    api_key = st.session_state.api_key
+if not api_key:
+    st.error("Please input your OpenAI API Key in the sidebar.\
+              Don't have a key? Click here: https://openai.com/blog/openai-api")
+    st.stop() 
+profile = Profile(introduction, api_key)
 if option == "Role Play":
-    st.session_state.analysis = 0
-    st.session_state.teach = 0
+    # st.session_state.your_friend = 0
+    # st.session_state.chat_consultant = 0
+    # st.session_state.date_expert = 0
     
     if st.session_state.role_play == 0:
         chat_box.ai_say(
             [
                 Markdown('Please give me a breif description of the role you want me to play in the sidebar! Try to include some key information like age, gender, careers, and also personality.\
-                         For example, She is a beautiful girl, currently 25 years old, pursuing a master\'s degree at UW. She enjoys skiing, singing, and hiking. She is cheerful, confident, and full of youthful energy.', 
+                         For example, \'Her name is Camila, a beautiful 27-year-old girl from Taiwan, pursuing her Master\'s in Information System at the University of Washington.\
+                         She loves yoga, movies, and outdoor activities. She\'s currently learning to ski.\'', 
                             in_expander=in_expander,
                             expanded=True, state='complete', title="CharmAI"),
             ]
         )
         st.session_state.role_play += 1
     if st.session_state.role_play >= 1:
-        profile = Profile(introduction, api_key)
         age, gender, career, personality, hobby = profile.returnProfile()
         if len(chat_box.history) <= 4:
             career = 'unknown'
@@ -117,29 +147,23 @@ if option == "Role Play":
             personality, hobby = 'unknown', 'unknown'
             userHobby = 'unknown'
         LLM = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby), api_key)
-
         if query := st.chat_input('Chat with CharmAI...'):
             chat_box.user_say(query)
             text, st.session_state.recording = LLM.rolePlay(query, st.session_state.recording)
+            if give_feedback:
+                feedback = LLM.giveFeedback(query, st.session_state.recording)
+                chat_box.ai_say(
+                    [
+                        Markdown(feedback, in_expander=in_expander,
+                                    expanded=True, state='complete', title="CharmAI"),
+                    ]
+                )
             chat_box.ai_say(
                 [
                     Markdown(text, in_expander=in_expander,
                                 expanded=True, state='complete', title="CharmAI"),
                 ]
             )
-    btns.download_button(
-        "Export Markdown",
-        "".join(chat_box.export2md()),
-        file_name=f"chat_history.md",
-        mime="text/markdown",
-    )
-
-    btns.download_button(
-        "Export Json",
-        chat_box.to_json(),
-        file_name="chat_history.json",
-        mime="text/json",
-    )
 
     if btns.button("Clear history"):
         chat_box.init_session(clear=True)
@@ -153,47 +177,38 @@ if option == "Role Play":
     if show_history:
         st.write(chat_box.history)
 
-elif option == "Teaching":
+elif option == "Your Friend":
     st.session_state.role_play = 0
-    st.session_state.analysis = 0
-    if st.session_state.teach == 0:
+    # st.session_state.chat_consultant = 0
+    # st.session_state.date_expert = 0
+    if st.session_state.your_friend == 0:
         chat_box.ai_say(
             [
-                Markdown('Please give me a breif description of the person that you will chat in the sidebar with so that I can guide you how to efficiently communicate with them! Try to include some key information like age, gender, careers, and also personality.', 
+                Markdown('Hey there! I\'m your best friend! You can talk everything you want to me!', 
                             in_expander=in_expander,
                             expanded=True, state='complete', title="CharmAI"),
             ]
         )
-        st.session_state.teach += 1
-    profile = Profile(introduction, api_key)
-    age, gender, career, personality, hobby = profile.returnProfile()
+        st.session_state.your_friend += 1
+    age = gender = career = personality = hobby = 'unkown'
     if len(chat_box.history) <= 4:
         career = 'unknown'
     if len(chat_box.history) <= 8:
         personality, hobby = 'unknown', 'unknown'
     LLM = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby), api_key)
+    male = ['male', 'man', 'boy', 'gentleman', 'sir']
     if query := st.chat_input('Chat with CharmAI...'):
         chat_box.user_say(query)
-        text, st.session_state.recording = LLM.teaching(query, st.session_state.recording)
+        if userGender.lower() in male:
+            text, st.session_state.recording = LLM.yourFriendForMale(query, st.session_state.recording)
+        else:
+            text, st.session_state.recording = LLM.yourFriendForFemale(query, st.session_state.recording)
         chat_box.ai_say(
             [
                 Markdown(text, in_expander=in_expander,
                             expanded=True, state='complete', title="CharmAI"),
             ]
         )
-    btns.download_button(
-        "Export Markdown",
-        "".join(chat_box.export2md()),
-        file_name=f"chat_history.md",
-        mime="text/markdown",
-    )
-
-    btns.download_button(
-        "Export Json",
-        chat_box.to_json(),
-        file_name="chat_history.json",
-        mime="text/json",
-    )
 
     if btns.button("Clear history"):
         chat_box.init_session(clear=True)
@@ -207,10 +222,11 @@ elif option == "Teaching":
     if show_history:
         st.write(chat_box.history)
 
-elif option == "Analysis":
+elif option == "Chat Consultant":
     st.session_state.role_play = 0
-    st.session_state.teach = 0
-    if st.session_state.analysis == 0:
+    # st.session_state.your_friend = 0
+    # st.session_state.date_expert = 0
+    if st.session_state.chat_consultant == 0:
         chat_box.ai_say(
             [
                 Markdown('Please give me a file or screen shot that contains the chat you want me to analysis so that I can give you some suggestion about how to reply!', 
@@ -218,37 +234,59 @@ elif option == "Analysis":
                             expanded=True, state='complete', title="CharmAI"),
             ]
         )
-        st.session_state.analysis += 1
-    profile = Profile(introduction, api_key)
-    age, gender, career, personality, hobby = profile.returnProfile()
-    if len(chat_box.history) <= 4:
-        career = 'unknown'
-    if len(chat_box.history) <= 8:
-        personality, hobby = 'unknown', 'unknown'
-    LLM = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby), api_key)
+        st.session_state.chat_consultant += 1
+        st.image('chat_history.jpg')
 
     if query := st.chat_input('Chat with CharmAI...'):
         chat_box.user_say(query)
-        text, st.session_state.recording = LLM.analysis(query, st.session_state.recording)
+        if st.session_state.chat_consultant == 1:
+            chat_box.ai_say(
+                [
+                    Markdown('Hi Andrew,<br>\
+                            From your reply, Camila might think that you are not interested in her.<br>\
+                            She brought the topic- He even wanted to ask me out 😡 seems like she wants to gain your attention and see your respond,<br>\
+                            More aggressviely, this might be a chance to ask her out.', 
+                                in_expander=in_expander,
+                                expanded=True, state='complete', title="CharmAI"),
+                ]
+            )
+            st.session_state.chat_consultant += 1
+        else:
+            chat_box.ai_say(
+                [
+                    Markdown('Practice makes perfect! Why not to use our <b>Role Play</b> mode to practice you communication skills?', 
+                                in_expander=in_expander,
+                                expanded=True, state='complete', title="CharmAI"),
+                ]
+            )
+
+    if btns.button("Clear history"):
+        chat_box.init_session(clear=True)
+        st.rerun()
+
+    if btns.button("Start a new conversation"):
+        chat_box.init_session(clear=True)
+        st.session_state.recording = []
+        st.rerun()
+
+    if show_history:
+        st.write(chat_box.history)
+
+elif option == "Date Expert":
+    st.session_state.role_play = 0
+    # st.session_state.your_friend = 0
+    # st.session_state.chat_consultant = 0
+    if st.session_state.date_expert == 0:
         chat_box.ai_say(
             [
-                Markdown(text, in_expander=in_expander,
+                Markdown('Please give me a file or screen shot that contains the chat you want me to analysis so that I can give you some suggestion about how to reply!', 
+                            in_expander=in_expander,
                             expanded=True, state='complete', title="CharmAI"),
             ]
         )
-    btns.download_button(
-        "Export Markdown",
-        "".join(chat_box.export2md()),
-        file_name=f"chat_history.md",
-        mime="text/markdown",
-    )
-
-    btns.download_button(
-        "Export Json",
-        chat_box.to_json(),
-        file_name="chat_history.json",
-        mime="text/json",
-    )
+        st.session_state.date_expert += 1
+    profile = Profile(introduction, api_key)
+    age, gender, career, personality, hobby = profile.returnProfile()
 
     if btns.button("Clear history"):
         chat_box.init_session(clear=True)
@@ -264,8 +302,9 @@ elif option == "Analysis":
 
 else:
     st.session_state.role_play = 0
-    st.session_state.teach = 0
-    st.session_state.analysis = 0
+    # st.session_state.your_friend = 0
+    # st.session_state.chat_consultant = 0
+    # st.session_state.date_expert = 0
     profile = ''
     userProfile = ''
     LLM = LargeLanguageModels(profile, userProfile, api_key)
@@ -278,20 +317,7 @@ else:
                             expanded=True, state='complete', title="CharmAI"),
             ]
         )
-    btns.download_button(
-        "Export Markdown",
-        "".join(chat_box.export2md()),
-        file_name=f"chat_history.md",
-        mime="text/markdown",
-    )
-
-    btns.download_button(
-        "Export Json",
-        chat_box.to_json(),
-        file_name="chat_history.json",
-        mime="text/json",
-    )
-
+      
     if btns.button("Clear history"):
         chat_box.init_session(clear=True)
         st.rerun()
