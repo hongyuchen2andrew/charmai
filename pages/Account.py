@@ -17,7 +17,7 @@ gender = st.text_input(label = '**Gender** (Optinal)', placeholder = 'Please ent
 job = st.text_input(label = '**Job** (Optinal)', placeholder = 'Please enter your job...')
 personality = st.text_input(label = '**Personality** (Personality can be a description or several keywords) (Optinal)', placeholder = 'Please enter your personalities...')
 hobby = st.text_input(label = '**Hobby** (Hobby can be a description or several keywords) (Optinal)', placeholder = 'Please enter your hobbies...')
-#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
+
 col1, col2 = st.columns(2)
 with col2:
     if st.button("Not Now"):
