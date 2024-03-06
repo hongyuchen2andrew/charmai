@@ -7,12 +7,6 @@ class Profile:
     def __init__(self, prompt, api_key):
         self.prompt = prompt
         self.api_key = api_key
-        # self.age = 'unknown'
-        # self.gender = 'unknown'
-        # self.career = 'unknown'
-        # self.personality = 'unknown'
-        # self.hobby = 'unknown'
-        # self.situation = 'unknown'
         self.max_try = 0
 
     def questionAnswering(self, question, answer_format):
