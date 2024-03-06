@@ -8,7 +8,6 @@ import streamlit.components.v1 as components
 
 from gpt import LargeLanguageModels
 from profiles import Profile
-from duckduckgo import restaurantRecommendation
 
 introduction = 'Hi, my name is Andrew. I have lived in China for 20 years. Last year, I went to MIT for my master degree. So as you can see, I am twenty one years old\
                 I love coding, playing basketball, singing, going hiking. Nice to meet you.'  
