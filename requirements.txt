@@ -4,4 +4,3 @@ openai
 streamlit_modal
 streamlit_chatbox
 google-search-results
-serpapi
