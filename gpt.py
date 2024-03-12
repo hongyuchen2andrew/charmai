@@ -123,6 +123,31 @@ class LargeLanguageModels:
           ]
         )
         return completion.choices[0].message.content
+
+    def consultantReply(self, prompt, recording, additional_information = ''):
+        openai.api_key = self.key
+        age, gender, career, personality, hobby = self.profile
+        userName, userAge, userGender, userCareer, userPersonality, userHobby = self.userProfile
+        completion = openai.chat.completions.create(
+          model="gpt-4",
+          messages=[
+            {"role": "system", "content": f'You\'re a person that\'s really good at chatting. Right now, you\'re using a dating app.\
+                              You\'re a {age}-year-old {gender} {career} with personalities including {personality}.\
+                              She/He has hobbies like {hobby}\
+                              You\'re chatting with a {userAge}-year-old {userGender} {userCareer} with personalities including {userPersonality}.\
+                              You has hobbies like {userHobby}\
+                              Try to chat with her as much as possible to make her feel good about you.'},
+            #{"role": "system", "content": '6. Add some emojis and use some common abbreviations if suitable. For example, \'let me know\' can be writen into \'LMK\''},
+            {"role": "system", "content": f"This is the past chat history: {recording}, all your output should based on the you chat history"},
+            {"role": "system", "content": f"This is the detail of the situation of  chat: {additional_information}. Your reply should be based on the analysis of the situation."},
+            {"role": "system", "content": 'Tone: Conversational, Spartan, Less corporate jargon, No difficult words'},
+            {"role": "system", "content": 'Please keep your answer within 60 words.'},
+            {"role": "user", "content": "What should I reply?"}
+          ]
+        )
+        recording.append('User:'+ prompt)
+        recording.append('System:'+ completion.choices[0].message.content)
+        return completion.choices[0].message.content, recording
     
     def giveFeedback(self, prompt, recording):
         openai.api_key = self.key
