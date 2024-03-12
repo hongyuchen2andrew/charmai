@@ -11,7 +11,6 @@ import streamlit.components.v1 as components
 from gpt import LargeLanguageModels
 from profiles import Profile
 from duckduckgo import restaurantRecommendation
-from perplexity import realTimeInformation
 from vision import Vision
 
 api_key = st.secrets["API_KEY"]
