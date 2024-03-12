@@ -101,27 +101,28 @@ class LargeLanguageModels:
         return completion.choices[0].message.content, recording
 
     #If the user choose option == analysis, then GPT will analysis the history file or screen shot and teach you how to reply
-    def chatConsultant(self, prompt, recording):
+    def chatConsultant(self, recording):
         openai.api_key = self.key
         age, gender, career, personality, hobby = self.profile
         userName, userAge, userGender, userCareer, userPersonality, userHobby = self.userProfile
         completion = openai.chat.completions.create(
           model="gpt-4",
           messages=[
-            {"role": "system", "content": f'You\'re a person that\'s really good at chatting. Right now, you\'re using a dating app.\
-                              You\'re a {userAge}-year-old {userGender} {userCareer} with personalities including {userPersonality}.\
+            {"role": "system", "content": f'You are very skilled at analyzing the psychological state of others based on chat records and understanding why they would say such things.\
+                              Now You\'re a {userAge}-year-old {userGender} {userCareer} with personalities including {userPersonality}.\
                               You has hobbies like {userHobby}\
-                              You\'re chatting with a {age}-year-old {gender} {career} with personalities including  {personality}.\
+                              You\'re chatting with a {age}-year-old {gender} named \'A\', who\'s a {career} with personalities including  {personality}.\
                               She/He has hobbies like {hobby}\
                               Try to chat with her as much as possible to make her feel good about you.'},
-            {"role": "system", "content": f"This is your past chat history{recording}, all your output should based on the you chat history"},
-            {"role": "system", "content": 'Tone: Conversational, Spartan, Less corporate jargon'},
-            {"role": "user", "content": f"{prompt}"}
+            {"role": "system", "content": f"This is your chat history: {recording}."},
+            {"role": "user", "content": "Please answer the following questions based on the provided chat records:\
+                                        1. Why did A say such things?\
+                                        2. What psychological activities led A to say these things?\
+                                        3. What is the purpose behind A's statements?\
+                                        4. Are there any implied meanings behind A's words?"}
           ]
         )
-        recording.append('User:'+ prompt)
-        recording.append('System:'+ completion.choices[0].message.content)
-        return completion.choices[0].message.content, recording
+        return completion.choices[0].message.content
     
     def giveFeedback(self, prompt, recording):
         openai.api_key = self.key
