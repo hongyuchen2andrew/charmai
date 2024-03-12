@@ -76,9 +76,6 @@ with st.sidebar:
     if option == "Role Play":
         give_feedback = st.checkbox('Recieve feedback regarding your message from CharmAI.', False)
     introduction = st.text_area(label = 'Description', placeholder = 'Please enter the description...')
-    api_key = st.text_input(label = 'OpenAI API Key', placeholder = 'Please enter your OpenAI API key...')
-    perplexity_key = st.text_input(label = 'Perplexity API Key', placeholder = 'Please enter your Perplexity API key...')
-    google_key = st.text_input(label = 'Google API Key', placeholder = 'Please enter your Google API key...')
     st.divider()
 
     btns = st.container()
