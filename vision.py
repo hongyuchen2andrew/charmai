@@ -3,11 +3,8 @@ from pathlib import Path
 import PIL.Image
 import json
 import os
-from dotenv import find_dotenv, load_dotenv
 
-load_dotenv(find_dotenv('.env'))
-env_dist = os.environ
-GEMINI_API_KEY = env_dist.get('GEMINI_API_KEY')
+GEMINI_API_KEY =  st.secrets["GEMINI_API_KEY"]
 genai.configure(api_key = GEMINI_API_KEY)
 
 class Vision:
