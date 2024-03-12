@@ -13,12 +13,12 @@ from profiles import Profile
 from duckduckgo import restaurantRecommendation
 from vision import Vision
 
-api_key = st.secrets["API_KEY"]
-perplexity_key = st.secrets["PERPLEXITY_KEY"]
-google_key = st.secrets["GOOGLE_KEY"]
-llama_key = st.secrets["LLAMA_KEY"]
-langChain_key = st.secrets["LANGCHAIN_KEY"]
-gemini_key = st.secrets["GEMINI_API_KEY"]
+api_key = streamlit.secrets["API_KEY"]
+perplexity_key = streamlit.secrets["PERPLEXITY_KEY"]
+google_key = streamlit.secrets["GOOGLE_KEY"]
+llama_key = streamlit.secrets["LLAMA_KEY"]
+langChain_key = streamlit.secrets["LANGCHAIN_KEY"]
+gemini_key = streamlit.secrets["GEMINI_API_KEY"]
 
 introduction = 'Hi, my name is Andrew. I have lived in China for 20 years. Last year, I went to MIT for my master degree. So as you can see, I am twenty one years old\
                 I love coding, playing basketball, singing, going hiking. Nice to meet you.'  
