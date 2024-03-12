@@ -74,13 +74,12 @@ with col2:
 # st.sidebar.write("chenXXXXXXXX@gmail.com")
 # st.sidebar.header("Phone")
 # st.sidebar.write("(+1) XXX-XXX-XXXX")
-with st.sidebar:
-    st.sidebar.header("Organization:")
-    st.sidebar.write("University of Washington")
-    st.divider()
-    st.sidebar.title("Contact us")
-    st.sidebar.header("Web Developer | Machine Learning Engineer: Hongyu Chen (He/Him)")
-    st.sidebar.write("https://www.linkedin.com/in/hongyuchenuw/")
-    st.sidebar.header("Product Manager: Camila Lin (She/Her)")
-    st.sidebar.write("https://www.linkedin.com/in/chia-yu-lin/")
+
+st.sidebar.header("Organization:")
+st.sidebar.write("University of Washington")
+st.sidebar.title("Contact us:")
+st.sidebar.header("Web Developer | Machine Learning Engineer: Hongyu Chen (He/Him)")
+st.sidebar.write("https://www.linkedin.com/in/hongyuchenuw/")
+st.sidebar.header("Product Manager: Camila Lin (She/Her)")
+st.sidebar.write("https://www.linkedin.com/in/chia-yu-lin/")
 
