@@ -3,13 +3,6 @@ import base64
 from streamlit_extras.switch_page_button import switch_page
 import os
 
-st.session_state.api_key = st.secrets["API_KEY"]
-st.session_state.perplexity_key = st.secrets["PERPLEXITY_KEY"]
-st.session_state.google_key = st.secrets["GOOGLE_KEY"]
-st.session_state.llama_key = st.secrets["LLAMA_KEY"]
-st.session_state.langChain_key = st.secrets["LANGCHAIN_KEY"]
-st.session_state.gemini_key = st.secrets["GEMINI_API_KEY"]
-
 def get_base64(bin_file):
     with open(bin_file, 'rb') as f:
         data = f.read()
