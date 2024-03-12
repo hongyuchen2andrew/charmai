@@ -16,7 +16,7 @@ google_key = st.secrets["GOOGLE_KEY"]
 llama_key = st.secrets["LLAMA_KEY"]
 langChain_key = st.secrets["LANGCHAIN_KEY"]
 gemini_key = st.secrets["GEMINI_API_KEY"]
-
+st.write(api_key)
 introduction = 'Hi, my name is Andrew. I have lived in China for 20 years. Last year, I went to MIT for my master degree. So as you can see, I am twenty one years old\
                 I love coding, playing basketball, singing, going hiking. Nice to meet you.'  
 
