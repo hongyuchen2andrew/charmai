@@ -119,16 +119,7 @@ if st.session_state.guidance == 0:
         ]
     )
     st.session_state.guidance += 1
-# if ("api_key" in st.session_state) and ("perplexity_key" in st.session_state) and ("google_key" in st.session_state):
-#     api_key = st.session_state.api_key
-#     perplexity_key = st.session_state.perplexity_key
-#     google_key = st.session_state.google_key
-# if (not api_key) or (not perplexity_key) or (not google_key):
-#     st.error("Please input your API Key in the sidebar.\
-#               Don't have a OpenAI key? Click here: https://openai.com/blog/openai-api\
-#               Don't have a Perplexity key? Click here: https://www.perplexity.ai/settings/api\
-#               Don't have a Google key? Click here: https://serpapi.com/.")
-#     st.stop() 
+  
 profile = Profile(introduction, api_key)
 if option == "Role Play":
     st.session_state.your_friend = 0
@@ -174,19 +165,6 @@ if option == "Role Play":
                                 expanded=True, state='complete', title="CharmAI"),
                 ]
             )
-    # btns.download_button(
-    #     "Export Markdown",
-    #     "".join(chat_box.export2md()),
-    #     file_name=f"chat_history.md",
-    #     mime="text/markdown",
-    # )
-
-    # btns.download_button(
-    #     "Export Json",
-    #     chat_box.to_json(),
-    #     file_name="chat_history.json",
-    #     mime="text/json",
-    # )
 
     if btns.button("Clear history"):
         chat_box.init_session(clear=True)
@@ -233,19 +211,6 @@ elif option == "Your Friend":
                             expanded=True, state='complete', title="CharmAI"),
             ]
         )
-    # btns.download_button(
-    #     "Export Markdown",
-    #     "".join(chat_box.export2md()),
-    #     file_name=f"chat_history.md",
-    #     mime="text/markdown",
-    # )
-
-    # btns.download_button(
-    #     "Export Json",
-    #     chat_box.to_json(),
-    #     file_name="chat_history.json",
-    #     mime="text/json",
-    # )
 
     if btns.button("Clear history"):
         chat_box.init_session(clear=True)
@@ -264,78 +229,61 @@ elif option == "Chat Consultant":
     st.session_state.your_friend = 0
     st.session_state.date_expert = 0
     if st.session_state.chat_consultant == 0:
-        chat_box.ai_say(
-            [
-                Markdown('Please give me a file or screen shot that contains the chat you want me to analysis so that I can give you some suggestion about how to reply!', 
+        if 'analysis' in st.session_state:
+            st.session_state.analysis = ''
+        if not img:
+            chat_box.ai_say(
+                [
+                    Markdown('Please give me a file or screen shot that contains the chat you want me to analysis so that I can give you some suggestion about how to reply!', 
+                                in_expander=in_expander,
+                                expanded=True, state='complete', title="CharmAI"),
+                ]
+            )
+        else:
+            bytes_data = img.read()
+            im = Image.open(BytesIO(bytes_data))
+            if img:
+                st.image(bytes_data)
+            st.session_state.chat_consultant += 1
+
+            gemini = Vision(im)
+            chat_history = gemini.chatHistoryScreenshot()
+            age, gender, career, personality, hobby = profile.returnProfile()
+            LLM = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby))
+            analysis = LLM.chatConsultant(chat_history)
+            if 'analysis' not in st.session_state:
+                st.session_state.analysis = analysis
+
+            #Here, GPT need to role play the user, so we exchange the positions of the two profiles
+            LLM = LargeLanguageModels((userAge, userGender, userCareer, userPersonality, userHobby), ('', age, gender, career, personality, hobby))
+            prompt = f'This is the situation: {analysis}. Please reply to \'A\' based on the situation and the chatting history.'
+            text, _ = LLM.rolePlay(prompt, list(analysis))
+            chat_box.ai_say(
+                [
+                    Markdown(analysis, 
+                            in_expander=in_expander,
+                            expanded=True, state='complete', title="Analysis"),
+                ]
+            )
+            chat_box.ai_say(
+                [
+                    Markdown(text, 
                             in_expander=in_expander,
                             expanded=True, state='complete', title="CharmAI"),
+                ]
+            )
+
+    if query := st.chat_input('Ask something about the screenshot...'):
+        chat_box.user_say(query)
+        text = LLM.qustionAnsweringBot(prompt = query, additional_information = st.session_state.analysis)
+        chat_box.ai_say(
+            [
+                Markdown(text, 
+                        in_expander=in_expander,
+                        expanded=True, state='complete', title="Chat Consultant"),
             ]
         )
-        st.session_state.chat_consultant += 1
-    if image:
-        st.image('chat_history.jpg')
-    # if image:
-    #     chat_box.ai_say(
-    #         [
-    #             Markdown('File successfully uploaded!', 
-    #                         in_expander=in_expander,
-    #                         expanded=True, state='complete', title="CharmAI"),
-    #         ]
-    #     )
 
-    if query := st.chat_input('Chat with CharmAI...'):
-        chat_box.user_say(query)
-        if st.session_state.chat_consultant < 100:
-            chat_box.ai_say(
-                [
-                    Markdown('Hi Andrew,<br>\
-                            From your reply, Camila might think that you are not interested in her.<br>\
-                            She brought the topic- He even wanted to ask me out 😡 seems like she wants to gain your attention and see your respond,<br>\
-                            More aggressviely, this might be a chance to ask her out.', 
-                                in_expander=in_expander,
-                                expanded=True, state='complete', title="CharmAI"),
-                ]
-            )
-            st.session_state.chat_consultant += 100
-        else:
-            chat_box.ai_say(
-                [
-                    Markdown('Practice makes perfect! Why not to use our <b>Role Play</b> mode to practice you communication skills?', 
-                                in_expander=in_expander,
-                                expanded=True, state='complete', title="CharmAI"),
-                ]
-            )
-
-    # profile = Profile(introduction, api_key)
-    # age, gender, career, personality, hobby = profile.returnProfile()
-    # if len(chat_box.history) <= 4:
-    #     career = 'unknown'
-    # if len(chat_box.history) <= 8:
-    #     personality, hobby = 'unknown', 'unknown'
-    # LLM = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby), api_key)
-
-    # if query := st.chat_input('Chat with CharmAI...'):
-    #     chat_box.user_say(query)
-    #     text, st.session_state.recording = LLM.chatConsultant(query, st.session_state.recording)
-    #     chat_box.ai_say(
-    #         [
-    #             Markdown(text, in_expander=in_expander,
-    #                         expanded=True, state='complete', title="CharmAI"),
-    #         ]
-    #     )
-    # btns.download_button(
-    #     "Export Markdown",
-    #     "".join(chat_box.export2md()),
-    #     file_name=f"chat_history.md",
-    #     mime="text/markdown",
-    # )
-
-    # btns.download_button(
-    #     "Export Json",
-    #     chat_box.to_json(),
-    #     file_name="chat_history.json",
-    #     mime="text/json",
-    # )
 
     if btns.button("Clear history"):
         chat_box.init_session(clear=True)
@@ -420,28 +368,6 @@ elif option == "Date Expert":
                 st.write('**Link:** ', 'unknown')
                 #print('Link: ', 'unknown')
 
-
-        # chat_box.ai_say(
-        #     [
-        #         Markdown(text, in_expander=in_expander,
-        #                     expanded=True, state='complete', title="CharmAI"),
-        #     ]
-        # )
-
-    # btns.download_button(
-    #     "Export Markdown",
-    #     "".join(chat_box.export2md()),
-    #     file_name=f"chat_history.md",
-    #     mime="text/markdown",
-    # )
-
-    # btns.download_button(
-    #     "Export Json",
-    #     chat_box.to_json(),
-    #     file_name="chat_history.json",
-    #     mime="text/json",
-    # )
-
     if btns.button("Clear history"):
         chat_box.init_session(clear=True)
         st.rerun()
@@ -471,19 +397,6 @@ else:
                             expanded=True, state='complete', title="CharmAI"),
             ]
         )
-    # btns.download_button(
-    #     "Export Markdown",
-    #     "".join(chat_box.export2md()),
-    #     file_name=f"chat_history.md",
-    #     mime="text/markdown",
-    # )
-
-    # btns.download_button(
-    #     "Export Json",
-    #     chat_box.to_json(),
-    #     file_name="chat_history.json",
-    #     mime="text/json",
-    # )
 
     if btns.button("Clear history"):
         chat_box.init_session(clear=True)
