@@ -115,16 +115,16 @@ if st.session_state.guidance == 0:
         ]
     )
     st.session_state.guidance += 1
-if ("api_key" in st.session_state) and ("perplexity_key" in st.session_state) and ("google_key" in st.session_state):
-    api_key = st.session_state.api_key
-    perplexity_key = st.session_state.perplexity_key
-    google_key = st.session_state.google_key
-if (not api_key) or (not perplexity_key) or (not google_key):
-    st.error("Please input your API Key in the sidebar.\
-              Don't have a OpenAI key? Click here: https://openai.com/blog/openai-api\
-              Don't have a Perplexity key? Click here: https://www.perplexity.ai/settings/api\
-              Don't have a Google key? Click here: https://serpapi.com/.")
-    st.stop() 
+# if ("api_key" in st.session_state) and ("perplexity_key" in st.session_state) and ("google_key" in st.session_state):
+#     api_key = st.session_state.api_key
+#     perplexity_key = st.session_state.perplexity_key
+#     google_key = st.session_state.google_key
+# if (not api_key) or (not perplexity_key) or (not google_key):
+#     st.error("Please input your API Key in the sidebar.\
+#               Don't have a OpenAI key? Click here: https://openai.com/blog/openai-api\
+#               Don't have a Perplexity key? Click here: https://www.perplexity.ai/settings/api\
+#               Don't have a Google key? Click here: https://serpapi.com/.")
+#     st.stop() 
 profile = Profile(introduction, api_key)
 if option == "Role Play":
     st.session_state.your_friend = 0
