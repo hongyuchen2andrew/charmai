@@ -1,7 +1,13 @@
 import streamlit as st
 import base64
 from streamlit_extras.switch_page_button import switch_page
-#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
+import os
+
+api_key = st.secrets["api_key"]
+perplexity_key = st.secrets["perplexity_key"]
+google_key = st.secrets["google_key"]
+llama_key = st.secrets["llama_key"]
+langChain_key = st.secrets["langChain_key"]
 
 def get_base64(bin_file):
     with open(bin_file, 'rb') as f:
