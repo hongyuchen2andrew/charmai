@@ -80,7 +80,7 @@ with st.sidebar:
 
     btns = st.container()
 
-    image = st.file_uploader(
+    img = st.file_uploader(
         "Chat history screenshot"
     )
 
