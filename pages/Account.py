@@ -2,12 +2,7 @@ import streamlit as st
 from profiles import Profile
 from streamlit_extras.switch_page_button import switch_page
 
-st.session_state.api_key = st.secrets["API_KEY"]
-st.session_state.perplexity_key = st.secrets["PERPLEXITY_KEY"]
-st.session_state.google_key = st.secrets["GOOGLE_KEY"]
-st.session_state.llama_key = st.secrets["LLAMA_KEY"]
-st.session_state.langChain_key = st.secrets["LANGCHAIN_KEY"]
-st.session_state.gemini_key = st.secrets["GEMINI_API_KEY"]
+api_key = st.secrets["API_KEY"]
 
 st.markdown("<h2 style='color:pink; font-size: 60px; text-align:left; margin-top: -40px'>Account</h2>", unsafe_allow_html=True) 
 # api_key = st.text_input(label = 'OpenAI API Key (Required)', placeholder = 'Please enter your OpenAI API Keys...')
