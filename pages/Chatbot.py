@@ -10,6 +10,13 @@ from gpt import LargeLanguageModels
 from profiles import Profile
 from duckduckgo import restaurantRecommendation
 
+st.session_state.api_key = st.secrets["API_KEY"]
+st.session_state.perplexity_key = st.secrets["PERPLEXITY_KEY"]
+st.session_state.google_key = st.secrets["GOOGLE_KEY"]
+st.session_state.llama_key = st.secrets["LLAMA_KEY"]
+st.session_state.langChain_key = st.secrets["LANGCHAIN_KEY"]
+st.session_state.gemini_key = st.secrets["GEMINI_API_KEY"]
+
 introduction = 'Hi, my name is Andrew. I have lived in China for 20 years. Last year, I went to MIT for my master degree. So as you can see, I am twenty one years old\
                 I love coding, playing basketball, singing, going hiking. Nice to meet you.'  
 
