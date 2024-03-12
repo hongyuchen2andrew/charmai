@@ -10,6 +10,12 @@ google_key = st.text_input(label = 'Google API Key', placeholder = 'Please enter
 st.session_state.api_key = api_key
 st.session_state.perplexity_key = perplexity_key
 st.session_state.google_key = google_key
+
+st.session_state.api_key = st.secrets["api_key"]
+st.session_state.perplexity_key = st.secrets["perplexity_key"]
+st.session_state.google_key = st.secrets["google_key"]
+st.session_state.llama_key = st.secrets["llama_key"]
+st.session_state.langChain_key = st.secrets["langChain_key"]
 if (not api_key) or (not perplexity_key) or (not google_key):
     st.error("Please input your API Key in the sidebar.\
               Don't have a OpenAI key? Click here: https://openai.com/blog/openai-api\
