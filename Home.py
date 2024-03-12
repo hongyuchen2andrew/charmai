@@ -71,12 +71,14 @@ with col2:
 
 
 # 在侧边栏添加小部件和内容
-st.sidebar.title("Contact us")
-st.sidebar.header("Email")
-st.sidebar.write("chenXXXXXXXX@gmail.com")
-st.sidebar.header("Phone")
-st.sidebar.write("(+1) XXX-XXX-XXXX")
-st.sidebar.header("Address")
+# st.sidebar.title("Contact us")
+# st.sidebar.header("Email")
+# st.sidebar.write("chenXXXXXXXX@gmail.com")
+# st.sidebar.header("Phone")
+# st.sidebar.write("(+1) XXX-XXX-XXXX")
+st.sidebar.header("Organization:")
 st.sidebar.write("University of Washington")
-st.sidebar.header("LinkedIn")
+st.sidebar.header("Developers:")
 st.sidebar.write("https://www.linkedin.com/in/hongyuchenuw/")
+st.sidebar.write("https://www.linkedin.com/in/chia-yu-lin/")
+
