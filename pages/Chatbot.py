@@ -228,6 +228,8 @@ elif option == "Chat Consultant":
     st.session_state.role_play = 0
     st.session_state.your_friend = 0
     st.session_state.date_expert = 0
+    age, gender, career, personality, hobby = profile.returnProfile()
+    LLM_1 = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby))
     if st.session_state.chat_consultant == 0:
         if 'analysis' in st.session_state:
             st.session_state.analysis = ''
@@ -248,9 +250,7 @@ elif option == "Chat Consultant":
 
             gemini = Vision(im)
             chat_history = gemini.chatHistoryScreenshot()
-            age, gender, career, personality, hobby = profile.returnProfile()
-            LLM = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby))
-            analysis = LLM.chatConsultant(chat_history)
+            analysis = LLM_1.chatConsultant(chat_history)
             if 'analysis' not in st.session_state:
                 st.session_state.analysis = analysis
 
@@ -275,7 +275,7 @@ elif option == "Chat Consultant":
 
     if query := st.chat_input('Ask something about the screenshot...'):
         chat_box.user_say(query)
-        text = LLM.qustionAnsweringBot(prompt = query, additional_information = st.session_state.analysis)
+        text = LLM_1.qustionAnsweringBot(prompt = query, additional_information = st.session_state.analysis)
         chat_box.ai_say(
             [
                 Markdown(text, 
