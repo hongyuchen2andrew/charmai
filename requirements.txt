@@ -5,3 +5,4 @@ streamlit_modal
 streamlit_chatbox
 serpapi
 google-search-results
+google-generativeai
