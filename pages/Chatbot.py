@@ -2,6 +2,8 @@ import streamlit as st
 from streamlit_chatbox import *
 import time
 import base64
+from PIL import Image
+from io import BytesIO
 import simplejson as json
 from streamlit_modal import Modal
 import streamlit.components.v1 as components
@@ -9,6 +11,8 @@ import streamlit.components.v1 as components
 from gpt import LargeLanguageModels
 from profiles import Profile
 from duckduckgo import restaurantRecommendation
+from perplexity import realTimeInformation
+from vision import Vision
 
 api_key = st.secrets["API_KEY"]
 perplexity_key = st.secrets["PERPLEXITY_KEY"]
