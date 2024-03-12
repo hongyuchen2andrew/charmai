@@ -229,7 +229,7 @@ elif option == "Chat Consultant":
     st.session_state.your_friend = 0
     st.session_state.date_expert = 0
     age, gender, career, personality, hobby = profile.returnProfile()
-    LLM_1 = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby))
+    LLM_1 = LargeLanguageModels((age, gender, career, personality, hobby), (userName, userAge, userGender, userCareer, userPersonality, userHobby), api_key)
     if st.session_state.chat_consultant == 0:
         if 'analysis' in st.session_state:
             st.session_state.analysis = ''
@@ -255,7 +255,7 @@ elif option == "Chat Consultant":
                 st.session_state.analysis = analysis
 
             #Here, GPT need to role play the user, so we exchange the positions of the two profiles
-            LLM = LargeLanguageModels((userAge, userGender, userCareer, userPersonality, userHobby), ('', age, gender, career, personality, hobby))
+            LLM = LargeLanguageModels((userAge, userGender, userCareer, userPersonality, userHobby), ('', age, gender, career, personality, hobby), api_key)
             prompt = f'This is the situation: {analysis}. Please reply to \'A\' based on the situation and the chatting history.'
             text, _ = LLM.rolePlay(prompt, list(analysis))
             chat_box.ai_say(
