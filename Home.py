@@ -79,8 +79,8 @@ with col2:
 st.sidebar.header("Organization:")
 st.sidebar.write("University of Washington")
 st.sidebar.header("Developers:")
-st.sidebar.header("Hongyu Chen (He/Him) Web Developer | Machine Learning Engineer:")
+st.sidebar.header("Web Developer | Machine Learning Engineer: Hongyu Chen (He/Him)")
 st.sidebar.write("https://www.linkedin.com/in/hongyuchenuw/")
-st.sidebar.header("Camila Lin (She/Her) Product Manager:")
+st.sidebar.header("Product Manager: Camila Lin (She/Her)")
 st.sidebar.write("https://www.linkedin.com/in/chia-yu-lin/")
 
