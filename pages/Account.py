@@ -7,9 +7,9 @@ st.markdown("<h2 style='color:pink; font-size: 60px; text-align:left; margin-top
 api_key = st.text_input(label = 'OpenAI API Key (Required)', placeholder = 'Please enter your OpenAI API Keys...')
 perplexity_key = st.text_input(label = 'Perplexity API Key', placeholder = 'Please enter your Perplexity API key...')
 google_key = st.text_input(label = 'Google API Key', placeholder = 'Please enter your Google API key...')
-st.session_state.api_key = api_key
-st.session_state.perplexity_key = perplexity_key
-st.session_state.google_key = google_key
+# st.session_state.api_key = api_key
+# st.session_state.perplexity_key = perplexity_key
+# st.session_state.google_key = google_key
 
 st.session_state.api_key = st.secrets["api_key"]
 st.session_state.perplexity_key = st.secrets["perplexity_key"]
