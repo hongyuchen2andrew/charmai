@@ -7,12 +7,13 @@ class LargeLanguageModels:
     def __init__(self, profile, userProfile, key):
         self.profile = profile
         self.userProfile = userProfile
+        self.model = "gpt-3.5-turbo"
         self.key = key
     #The most basic chatGPT with model == "gpt-4"
     def chatGPT(self, prompt, recording):
         openai.api_key = self.key
         completion = openai.chat.completions.create(
-        model="gpt-4",
+        model=self.model,
         messages=[
           {"role": "system", "content": f"This is your past chat history{recording}, all your output should based on the you chat history"},
           {"role": "user", "content": f"{prompt}"}
@@ -28,7 +29,7 @@ class LargeLanguageModels:
         age, gender, career, personality, hobby = self.profile
         userName, userAge, userGender, userCareer, userPersonality, userHobby = self.userProfile
         completion = openai.chat.completions.create(
-          model="gpt-4",
+          model=self.model,
           messages=[
             {"role": "system", "content": f'You\'re a person that\'s really good at chatting. Right now, you\'re using a dating app.\
                               You\'re a {age}-year-old {gender} {career} with personalities including {personality}.\
@@ -58,7 +59,7 @@ class LargeLanguageModels:
         openai.api_key = self.key
         userName, userAge, userGender, userCareer, userPersonality, userHobby = self.userProfile
         completion = openai.chat.completions.create(
-          model="gpt-4",
+          model=self.model,
           messages=[
             {"role": "system", "content": f'You are a smart, humorous woman with a variety of hobbies, who acts as a healing friend and counselor.\
                                           You\'re chatting with your best friend, a {userAge}-year-old {userGender} {userCareer} with personalities including {userPersonality}.\
@@ -81,7 +82,7 @@ class LargeLanguageModels:
         openai.api_key = self.key
         userName, userAge, userGender, userCareer, userPersonality, userHobby = self.userProfile
         completion = openai.chat.completions.create(
-          model="gpt-4",
+          model=self.model,
           messages=[
             {"role": "system", "content": f'As a wise and humorous guide, embrace the role of a nurturing friend and counselor,\
                                           particularly attuned to the emotional journeys of women navigating love and the dating scene.\
@@ -106,7 +107,7 @@ class LargeLanguageModels:
         age, gender, career, personality, hobby = self.profile
         userName, userAge, userGender, userCareer, userPersonality, userHobby = self.userProfile
         completion = openai.chat.completions.create(
-          model="gpt-4",
+          model=self.model,
           messages=[
             {"role": "system", "content": f'You are very skilled at analyzing the psychological state of others based on chat records and understanding why they would say such things.\
                               Now You\'re a {userAge}-year-old {userGender} {userCareer} with personalities including {userPersonality}.\
@@ -129,7 +130,7 @@ class LargeLanguageModels:
         age, gender, career, personality, hobby = self.profile
         userName, userAge, userGender, userCareer, userPersonality, userHobby = self.userProfile
         completion = openai.chat.completions.create(
-          model="gpt-4",
+          model=self.model,
           messages=[
             {"role": "system", "content": f'You\'re a person that\'s really good at chatting. Right now, you\'re using a dating app.\
                               You\'re a {age}-year-old {gender} {career} with personalities including {personality}.\
@@ -154,7 +155,7 @@ class LargeLanguageModels:
         age, gender, career, personality, hobby = self.profile
         userName, userAge, userGender, userCareer, userPersonality, userHobby = self.userProfile
         completion = openai.chat.completions.create(
-          model="gpt-4",
+          model=self.model,
           messages=[
             {"role": "system", "content": f'You\'re a person that\'s really good at chatting. Right now, you\'re using a dating app.\
                               You\'re a {age}-year-old {gender} {career} with personalities including {personality}.\
@@ -180,7 +181,7 @@ class LargeLanguageModels:
         openai.api_key = self.key
         age, gender, career, personality, hobby = self.profile
         completion = openai.chat.completions.create(
-        model="gpt-4",
+        model=self.model,
         messages=[
           {"role": "system", "content": "You are an expert of dating and is really good at planning dates based on the profile and description of your date partner."},
           {"role": "system", "content": f"Your date partner is a {age}-year-old {gender} {career} with personalities including {personality}.\
