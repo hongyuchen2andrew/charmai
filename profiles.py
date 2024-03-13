@@ -8,11 +8,12 @@ class Profile:
         self.prompt = prompt
         self.api_key = api_key
         self.max_try = 0
+        self.model = "gpt-3.5-turbo"
 
     def questionAnswering(self, question, answer_format):
         openai.api_key = self.api_key
         completion = openai.chat.completions.create(
-        model="gpt-4",
+        model=self.model,
         messages=[
           {"role": "system", "content": f'You\'re a bot that\'s really good at answering questions based on the information user given.'},
           {"role": "system", "content": f'You should answer the following question based on the prompt user input:{question}'},
