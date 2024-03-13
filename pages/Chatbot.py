@@ -260,7 +260,7 @@ elif option == "Chat Consultant":
             #Here, GPT need to role play the user, so we exchange the positions of the two profiles
             LLM = LargeLanguageModels((userAge, userGender, userCareer, userPersonality, userHobby), ('', age, gender, career, personality, hobby), api_key)
             prompt = f'This is the situation: {analysis}. Please reply to \'A\' based on the situation and the chatting history.'
-            text, _ = LLM.rolePlay(prompt, chat_history, list(analysis))
+            text, _ = LLM.consultantReply(prompt, chat_history, list(analysis))
             chat_box.ai_say(
                 [
                     Markdown(analysis, 
