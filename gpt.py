@@ -190,6 +190,7 @@ class LargeLanguageModels:
           {"role": "system", "content": "Your dating plan should contain the following information:"},
           {"role": "system", "content": "1. Your dating plan should contain the kinds of restaurants you will go, for example, Chinese or Korean restaurants. "},
           {"role": "system", "content": "2. Your dating plan should contain the place for entertainment, for example, cinema or Ski resort or park or national parks or museums."},
+          {"role": "system", "content": "3. Your dating plan should contain the time table. For example, \'3:00pm to 4:00pm, have a walk\'."},
           {"role": "system", "content": "Please make a dating plan based on the requirements mentioned above."},
           {"role": "user", "content": f"{prompt}"}
         ]
