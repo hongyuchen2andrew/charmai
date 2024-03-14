@@ -23,6 +23,18 @@ class LargeLanguageModels:
         recording.append('System:'+ completion.choices[0].message.content)
         return completion.choices[0].message.content, recording
     
+    def qustionAnsweringBot(self, prompt, additional_information = ''):
+        openai.api_key = self.key
+        completion = openai.chat.completions.create(
+        model="gpt-4",
+        messages=[
+          {"role": "system", "content": f"You are an expert of question answering. You should answer the user\'s questions based on what you know."},
+          {"role": "system", "content": f"You know that {additional_information}."},
+          {"role": "user", "content": f"{prompt}"}
+        ]
+        )
+        return completion.choices[0].message.content
+        
     #If the user choose option == role play, then GPT will play the specific role
     def rolePlay(self, prompt, recording):
         openai.api_key = self.key
